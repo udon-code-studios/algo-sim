@@ -6,10 +6,11 @@ import {
   Scripts,
   ScrollRestoration
 } from "remix";
+import type { MetaFunction } from "remix";
 
-export function meta() {
+export const meta: MetaFunction = () => {
   return { title: "New Remix App" };
-}
+};
 
 export default function App() {
   return (
