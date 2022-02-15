@@ -5,7 +5,7 @@ from node:16
 WORKDIR /app
 
 # install node packages
-COPY package.json package-lock.json .
+COPY package.json package-lock.json ./
 RUN npm ci
 
 # build app
