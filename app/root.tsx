@@ -8,6 +8,12 @@ import {
 } from "remix";
 import type { MetaFunction } from "remix";
 
+// added for tailwind
+import styles from "./styles/app.css";
+export function links() {
+  return [{ rel: "stylesheet", href: styles }]
+}
+
 export const meta: MetaFunction = () => {
   return { title: "New Remix App" };
 };
