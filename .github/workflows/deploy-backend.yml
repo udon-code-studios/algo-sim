@@ -1,0 +1,21 @@
+# file: .github/workflows/deploy-backend.yml
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    name: Build and Deploy Backend
+    runs-on: ubuntu-20.04
+    steps:
+    # https://github.com/marketplace/actions/checkout
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Print Message
+      run: echo 'Hello from the Deploy Backend workflow!'
+
+#
+# end of file: .github/workflows/deploy-cloud-run.yml
