@@ -1,4 +1,4 @@
-# file: .github/workflows/deploy-cloud-run.yml
+# file: .github/workflows/deploy-frontend.yml
 
 on:
   push:
@@ -37,7 +37,7 @@ jobs:
 
     - name: Build and Push Container
       run: |-
-        docker build -t gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.GCP_SERVICE }}:${{ github.sha }} .
+        docker build -t gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.GCP_SERVICE }}:${{ github.sha }} ./frontend
         docker push gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.GCP_SERVICE }}:${{ github.sha }}
 
     # https://github.com/marketplace/actions/deploy-to-cloud-run
