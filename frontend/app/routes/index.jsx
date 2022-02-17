@@ -7,6 +7,7 @@ export default function Index() {
 
   return (
     <div className='w-screen flex flex-col items-center space-y-4'>
+      
       <h1 className='text-4xl font-bold'>Welcome to AlgoSim</h1>
 
       <button
