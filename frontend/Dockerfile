@@ -2,6 +2,9 @@
 
 from node:16
 
+ARG BACKEND_URI
+ENV BACKEND_URI ${BACKEND_URI}
+
 WORKDIR /app
 
 # install node packages
