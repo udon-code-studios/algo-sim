@@ -14,7 +14,7 @@ const exec = util.promisify(require('child_process').exec);
 async function add(req, res) {
   // print status message
   console.log('[ STATUS ] POST /add -', Date());
-  //console.log('request body:', req.body);
+  console.log('request body:', req.body);
 
   // check for missing body fields
   if (!req.body.a || !req.body.b || !req.body.language || !req.body.code) {
@@ -26,8 +26,6 @@ async function add(req, res) {
 
   // generate unique string
   const unique = crypto.randomBytes(10).toString('hex');
-
-
 
   // run user code for specified language
   let stdout, stderr, fileName, contents;
