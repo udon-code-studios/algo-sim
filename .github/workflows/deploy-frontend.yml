@@ -7,51 +7,50 @@ on:
 
 env:
   GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }} # project ID
-  GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}         # service account key
-  GCP_REGION: us-east4                          # service location
-  GCP_SERVICE: algo-sim                         # cloud run service name
+  GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }} # service account key
+  GCP_REGION: us-east4 # service location
+  GCP_SERVICE: algo-sim # cloud run service name
 
 jobs:
   build-and-deploy:
     name: Build and Deploy Frontend
     runs-on: ubuntu-20.04
     steps:
-    # https://github.com/marketplace/actions/checkout
-    - name: Checkout
-      uses: actions/checkout@v2
+      # https://github.com/marketplace/actions/checkout
+      - name: Checkout
+        uses: actions/checkout@v2
 
-    # https://github.com/marketplace/actions/authenticate-to-google-cloud
-    - name: Authenticate to Google Cloud
-      id: auth
-      uses: google-github-actions/auth@v0
-      with:
-        credentials_json: ${{ env.GCP_SA_KEY }}
+      # https://github.com/marketplace/actions/authenticate-to-google-cloud
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v0
+        with:
+          credentials_json: ${{ env.GCP_SA_KEY }}
 
-    # https://github.com/marketplace/actions/set-up-gcloud-cloud-sdk-environment
-    - name: Setup Cloud SDK
-      uses: google-github-actions/setup-gcloud@v0
+      # https://github.com/marketplace/actions/set-up-gcloud-cloud-sdk-environment
+      - name: Setup Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0
 
-    # https://cloud.google.com/sdk/gcloud/reference/auth/configure-docker
-    - name: Authorize Docker push
-      run: gcloud auth configure-docker
+      # https://cloud.google.com/sdk/gcloud/reference/auth/configure-docker
+      - name: Authorize Docker push
+        run: gcloud auth configure-docker
 
-    - name: Build and Push Container
-      run: |-
-        docker build -t gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.GCP_SERVICE }}:${{ github.sha }} ./frontend
-        docker push gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.GCP_SERVICE }}:${{ github.sha }}
+      - name: Build and Push Container
+        run: |-
+          docker build -t gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.GCP_SERVICE }}:${{ github.sha }} ./frontend
+          docker push gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.GCP_SERVICE }}:${{ github.sha }}
 
-    # https://github.com/marketplace/actions/deploy-to-cloud-run
-    - name: Deploy to Cloud Run
-      id: deploy
-      uses: google-github-actions/deploy-cloudrun@v0
-      with:
-        service: ${{ env.GCP_SERVICE }}
-        image: gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.GCP_SERVICE }}:${{ github.sha }}
-        region: ${{ env.GCP_REGION }}
-        flags: --allow-unauthenticated
+      # https://github.com/marketplace/actions/deploy-to-cloud-run
+      - name: Deploy to Cloud Run
+        id: deploy
+        uses: google-github-actions/deploy-cloudrun@v0
+        with:
+          service: ${{ env.GCP_SERVICE }}
+          image: gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.GCP_SERVICE }}:${{ github.sha }}
+          region: ${{ env.GCP_REGION }}
+          flags: --allow-unauthenticated
 
-    - name: Print URL
-      run: echo ${{ steps.deploy.outputs.url }}
-
+      - name: Print URL
+        run: echo ${{ steps.deploy.outputs.url }}
 #
 # end of file: .github/workflows/deploy-cloud-run.yml
