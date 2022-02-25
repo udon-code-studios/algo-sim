@@ -8,9 +8,8 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 
-# build app
+# copy app
 COPY . .
-RUN npm run build
 
 # set port to serve app
 ENV PORT 3000
