@@ -1,14 +1,8 @@
-require('dotenv').config();
+const Alpaca = require('@alpacahq/alpaca-trade-api')
 
-const CLIENT_ID = process.env.APCA_API_KEY_ID;
-const CLIENT_SECRET = process.env.APCA_API_SECRET_KEY;
+const alpaca = new Alpaca();
 
-// check if client id and secret were found
-if (!CLIENT_ID || !CLIENT_SECRET) {
-  console.log('[ ERROR ] Client ID and/or client secret not found.');
-  console.log('[ STATUS ] Exiting...');
-  process.exit();
-}
+alpaca.getLatestTrade('AAPL').then((res) => { console.log(res); });
 
 async function getTrades() {
   const ticker = 'INTC';
