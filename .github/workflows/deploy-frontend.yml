@@ -38,7 +38,7 @@ jobs:
 
       - name: Build and Push Container
         run: |-
-          docker build --build-arg BACKEND_URI=${{ env.BACKEND_URI }} -t gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.GCP_SERVICE }}:${{ github.sha }} ./frontend
+          docker build --build-arg BACKEND_URI -t gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.GCP_SERVICE }}:${{ github.sha }} ./frontend
           docker push gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.GCP_SERVICE }}:${{ github.sha }}
 
       # https://github.com/marketplace/actions/deploy-to-cloud-run
