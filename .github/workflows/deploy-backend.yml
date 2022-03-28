@@ -10,6 +10,9 @@ env:
   GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }} # service account key
   GCP_REGION: us-east4 # service location
   GCP_SERVICE: algo-sim-backend # cloud run service name
+  APCA_API_KEY_ID: ${{ secrets.GCP_PROJECT_ID }}
+  APCA_API_SECRET_KEY: ${{ secrets.GCP_PROJECT_ID }}
+  APCA_API_BASE_URL: ${{ secrets.GCP_PROJECT_ID }}
 
 jobs:
   build-and-deploy:
@@ -37,7 +40,7 @@ jobs:
 
       - name: Build and Push Container
         run: |-
-          docker build -t gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.GCP_SERVICE }}:${{ github.sha }} ./backend
+          docker build --build-arg APCA_API_KEY_ID --build-arg APCA_API_SECRET_KEY --build-arg APCA_API_BASE_URL -t gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.GCP_SERVICE }}:${{ github.sha }} ./backend
           docker push gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.GCP_SERVICE }}:${{ github.sha }}
 
       # https://github.com/marketplace/actions/deploy-to-cloud-run
