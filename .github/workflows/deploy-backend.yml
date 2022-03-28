@@ -13,9 +13,9 @@ env:
   GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }} # service account key
   GCP_REGION: us-east4 # service location
   GCP_SERVICE: algo-sim-backend # cloud run service name
-  APCA_API_KEY_ID: ${{ secrets.GCP_PROJECT_ID }}
-  APCA_API_SECRET_KEY: ${{ secrets.GCP_PROJECT_ID }}
-  APCA_API_BASE_URL: ${{ secrets.GCP_PROJECT_ID }}
+  APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
+  APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
+  APCA_API_BASE_URL: ${{ secrets.APCA_API_BASE_URL }}
 
 jobs:
   build-and-deploy:
