@@ -1,4 +1,4 @@
-const URI = (process.env.BACKEND_URI) ? process.env.BACKEND_URI : 'http://localhost:8080';
+import * as Constants from '../../constants';
 
 export async function action({ request }) {
     const body = await request.formData();
@@ -9,7 +9,7 @@ export async function action({ request }) {
     const end = new Date(Date.parse(body._fields.end[0]))
     end.setHours(13, 32) // will be deprecated
 
-    const res = await fetch(`${URI}/bars`, {
+    const res = await fetch(`${Constants.BACKEND_URI}/bars`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
