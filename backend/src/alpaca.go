@@ -30,16 +30,30 @@ func getBarsMinute(symbol string, start time.Time, end time.Time) []Bar {
 	})
 	checkError(err)
 
+	// filter out bars outside normal trading hours
+	// normal trading hours (UTC): 13:30 - 19:59
+	n := 0
+	for _, alpacaBar := range alpacaBars {
+		hour, min, _ := alpacaBar.Timestamp.Clock()
+		if (hour >= 13) && (hour <= 19) { // between 13:00 - 19:59
+			if (hour == 13) && (min < 30) { // between 13:00 - 13:29
+				continue
+			}
+			alpacaBars[n] = alpacaBar
+			n++
+		}
+	}
+
 	// convert bars from Alpaca API to Bar structs
-	bars := make([]Bar, len(alpacaBars))
-	for i, alpacaBar := range alpacaBars {
+	bars := make([]Bar, n)
+	for i := 0; i < n; i++ {
 		bars[i] = Bar{
-			Timestamp: alpacaBar.Timestamp,
-			Open:      alpacaBar.Open,
-			High:      alpacaBar.High,
-			Low:       alpacaBar.Low,
-			Close:     alpacaBar.Close,
-			Volume:    alpacaBar.Volume,
+			Timestamp: alpacaBars[i].Timestamp,
+			Open:      alpacaBars[i].Open,
+			High:      alpacaBars[i].High,
+			Low:       alpacaBars[i].Low,
+			Close:     alpacaBars[i].Close,
+			Volume:    alpacaBars[i].Volume,
 		}
 	}
 
