@@ -5,9 +5,9 @@ export async function action({ request }) {
     console.log('[ STATUS ] POST /api/bars -', Date());
 
     const start = new Date(Date.parse(body._fields.start[0]))
-    start.setHours(13, 30) // will be deprecated
+    start.setHours(13, 30) // start of normal trading hours
     const end = new Date(Date.parse(body._fields.end[0]))
-    end.setHours(13, 32) // will be deprecated
+    end.setHours(19, 59) // end of normal trading hours
 
     const res = await fetch(`${Constants.BACKEND_URI}/bars`, {
         method: 'POST',
