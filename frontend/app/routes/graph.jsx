@@ -1,9 +1,18 @@
 // file: app/routes/add.jsx
 
 import { useFetcher } from "remix";
+import { useRef, useEffect } from "react";
+import * as d3 from "d3";
 
 export default function Graph() {
   const fetcher = useFetcher();
+  const svgRef = useRef(null);
+
+  useEffect(() => {
+    d3.select(this.myRef.current)
+      .append('p')
+      .text('Hello from D3');
+  }, [])
 
   return (
     <div className="flex min-h-screen w-full flex-col items-center bg-gray-500">
@@ -58,6 +67,7 @@ export default function Graph() {
           {fetcher.state === "submitting" && "submitting request..."}
         </p>
         <pre>{fetcher.type === "done" && fetcher.data.output}</pre>
+        <div ref={svgRef} />
       </div>
     </div>
   );
