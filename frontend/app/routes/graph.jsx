@@ -2,17 +2,10 @@
 
 import { useFetcher } from "remix";
 import { useRef, useEffect } from "react";
-import * as d3 from "d3";
+import { Line } from "react-chartjs-2";
 
 export default function Graph() {
   const fetcher = useFetcher();
-  const svgRef = useRef(null);
-
-  useEffect(() => {
-    d3.select(this.myRef.current)
-      .append('p')
-      .text('Hello from D3');
-  }, [])
 
   return (
     <div className="flex min-h-screen w-full flex-col items-center bg-gray-500">
@@ -62,12 +55,31 @@ export default function Graph() {
       {/* output */}
       <div className="min-h-80 max-w-xl space-y-4">
         <p className="text-center font-bold">
-          {fetcher.type === "done" &&
-            `Result: ${JSON.stringify(fetcher.data.bars)}`}
           {fetcher.state === "submitting" && "submitting request..."}
+          {fetcher.type === "done" &&
+            `Result: ${JSON.stringify(fetcher.data.bars[0])}`}
         </p>
-        <pre>{fetcher.type === "done" && fetcher.data.output}</pre>
-        <div ref={svgRef} />
+
+        {/* <pre>{fetcher.type === "done" && fetcher.data.output}</pre> */}
+
+        {fetcher.type === "done" &&
+          <Line
+            data={{
+              labels: fetcher.data.bars.map((e) => e.t),
+              datasets: [
+                {
+                  label: fetcher.data.symbol,
+                  data: fetcher.data.bars.map((e) => e.c),
+                  borderColor: 'rgb(255, 99, 132)',
+                  backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                },
+              ],
+            }}
+            options={{}}
+          />
+        }
+
+
       </div>
     </div>
   );
