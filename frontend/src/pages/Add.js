@@ -1,65 +1,99 @@
-// file: app/routes/add.jsx
-
 import { useEffect, useState } from "react";
 import Editor from "@monaco-editor/react";
 import * as constants from "../constants";
 
-async function submitForm(event) {
-  event.preventDefault();
-
-  console.log('[ STATUS ] making POST request to /add -', Date());
-
-  const res = await fetch(`${Constants.BACKEND_URI}/add`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      a: body._fields.a[0], // string
-      b: body._fields.b[0], // string
-      language: body._fields.language[0], // string
-      code: body._fields.code[0], // string
-    }),
-  });
-
-  const payload = await res.json();
-
-  return payload;
-}
+// editor starting values
+const defaultJavaScriptValue = "function add(a, b) {\n\t// complete function\n\treturn (99);\n}";
+const defaultPythonValue = "def add(a, b):\n\t# complete function\n\treturn (99)";
 
 export default function Add() {
   const [editor, setEditor] = useState(null);
+  const [editorValue, setEditorValue] = useState(defaultJavaScriptValue);
+
+  // form fields
+  const [a, setA] = useState(0);
+  const [b, setB] = useState(0);
   const [language, setLanguage] = useState("javascript");
   const [code, setCode] = useState("");
 
-  const defaultJavaScriptValue = "function add(a, b) {\n\t// complete function\n\treturn (99);\n}";
-  const defaultPythonValue = "def add(a, b):\n\t# complete function\n\treturn (99)";
-  const [value, setValue] = useState(defaultJavaScriptValue);
+  // results
+  const [c, setC] = useState(null);
+  const [output, setOutput] = useState(null);
 
   // change default editor value when new language is selected
   useEffect(() => {
     switch (language) {
       case "javascript":
-        setValue(defaultJavaScriptValue);
+        setEditorValue(defaultJavaScriptValue);
         break;
       case "python":
-        setValue(defaultPythonValue);
+        setEditorValue(defaultPythonValue);
         break;
     }
   }, [language]);
+
+  // call backend to execute code on form submission
+  function handleSubmit(event) {
+    console.log('[ STATUS ] making POST request to /add -', Date());
+
+    fetch(`${constants.BACKEND_URI}/add`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        a: a.toString(), // string
+        b: b.toString(), // string
+        language: language, // string
+        code: code, // string
+      }),
+    }).then(response => {
+      if (response.ok) {
+        response.json().then(data => {
+          console.log('[ STATUS ] POST request to /add succeeded -', Date());
+          console.log('[ DATA ] -', data);
+          setC(data.c);
+          setOutput(data.output);
+        });
+      } else {
+        response.json().then(error => {
+          console.log('[ STATUS ] POST request to /add failed -', Date());
+          console.log('[ ERROR ] -', error);
+        });
+      }
+    });
+
+    // prevent default form submission
+    event.preventDefault();
+  }
+
+  // update states with form field values
+  function handleInputChange(event) {
+    const { name, value } = event.target;
+
+    switch (name) {
+      case "language":
+        setLanguage(value);
+        break;
+      case "a":
+        setA(value);
+        break;
+      case "b":
+        setB(value);
+        break;
+    }
+  }
 
   return (
     <div className="flex min-h-screen w-full flex-col items-center bg-gray-500">
       <h1 className="mt-4 text-4xl font-bold">Just an add function...</h1>
 
-      <form onSubmit={submitForm} className="m-4 flex w-full max-w-xl flex-col rounded-2xl bg-gray-200 font-mono">
+      <form onSubmit={handleSubmit} className="m-4 flex w-full max-w-xl flex-col rounded-2xl bg-gray-200 font-mono">
         {/* language selctor */}
         <div className="flex w-full max-w-xl justify-end space-x-2 rounded-t-2xl bg-black px-3 pt-2 pr-6 font-mono text-gray-300">
           <label>select language</label>
           <select
             name="language"
+            onChange={handleInputChange}
             className="bg-gray-700"
-            onChange={(e) => {
-              setLanguage(e.target.value);
-            }}
           >
             <option value="javascript">JavaScript</option>
             <option value="python">Python</option>
@@ -71,15 +105,12 @@ export default function Add() {
           <Editor
             theme="vs-dark"
             language={language}
-            value={value}
+            value={editorValue}
             onMount={(editor, _) => {
               setEditor(editor);
             }}
           />
         </div>
-
-        {/* hidden code input */}
-        <input name="code" type="hidden" value={code} />
 
         {/* argument inputs */}
         <div className="m-4 flex justify-center space-x-8 ">
@@ -89,6 +120,7 @@ export default function Add() {
               name="a"
               type="text"
               defaultValue={101}
+              onChange={handleInputChange}
               className="ml-2 w-20 text-center"
             />
           </label>
@@ -98,6 +130,7 @@ export default function Add() {
               name="b"
               type="text"
               defaultValue={722}
+              onChange={handleInputChange}
               className="ml-2 w-20 text-center"
             />
           </label>
@@ -110,7 +143,7 @@ export default function Add() {
             onClick={() => {
               if (editor) setCode(editor.getValue());
             }}
-            className="w-72 rounded-md bg-teal-500 font-mono shadow-xl"
+            className="w-72 rounded-md bg-teal-500 font-mono shadow-xl duration-300 hover:bg-teal-900 hover:text-teal-200"
           >
             execute code
           </button>
@@ -120,10 +153,9 @@ export default function Add() {
       {/* output */}
       <div className="h-80 max-w-xl space-y-4">
         <p className="text-center font-bold">
-          {/* {fetcher.type === "done" && `Result: ${fetcher.data.c}`} */}
-          {/* {fetcher.state === "submitting" && "submitting request..."} */}
+          {c && `Result: ${c}`}
         </p>
-        {/* <pre>{fetcher.type === "done" && fetcher.data.output}</pre> */}
+        <pre>{output && output}</pre>
       </div>
     </div>
   );
