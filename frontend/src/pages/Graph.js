@@ -26,8 +26,8 @@ ChartJS.register(
 export default function Graph() {
   // form fields
   const [symbol, setSymbol] = useState('INTC');
-  const [startDate, setStartDate] = useState(new Date().toISOString().substring(0, 10));
-  const [endDate, setEndDate] = useState(new Date().toISOString().substring(0, 10));
+  const [startDate, setStartDate] = useState(new Date(2022, 3 - 1, 28).toISOString().substring(0, 10));
+  const [endDate, setEndDate] = useState(new Date(2022, 4 - 1, 8).toISOString().substring(0, 10));
 
   // results
   const [bars, setBars] = useState(null);
