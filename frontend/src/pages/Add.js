@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Editor from "@monaco-editor/react";
 import * as constants from "../constants";
 
@@ -84,6 +85,11 @@ export default function Add() {
 
   return (
     <div className="flex min-h-screen w-full flex-col items-center bg-gray-500">
+      {/* back button */}
+      <Link to="/" className="absolute top-10 left-10">
+        <button className="bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded-xl">Back</button>
+      </Link>
+
       <h1 className="mt-4 text-4xl font-bold">Just an add function...</h1>
 
       <form onSubmit={handleSubmit} className="m-4 flex w-full max-w-xl flex-col rounded-2xl bg-gray-200 font-mono">
