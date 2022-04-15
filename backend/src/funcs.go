@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"log"
+	"net/http"
 	"runtime"
 	"time"
 )
@@ -21,4 +22,9 @@ func randomHexString(len int) string {
 	randomBytes := make([]byte, len)
 	rand.Read(randomBytes)
 	return hex.EncodeToString(randomBytes)[:len]
+}
+
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	(*w).Header().Set("Access-Control-Allow-Headers", "Content-Type")
 }

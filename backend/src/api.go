@@ -16,6 +16,8 @@ import (
 func hello(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("[ STATUS ] request recieved (%s) %v\n", r.URL.Path, time.Now())
 
+	enableCors(&w)
+
 	if r.URL.Path != "/" {
 		http.Error(w, "404 not found", http.StatusNotFound)
 		return
@@ -44,6 +46,8 @@ type BarsResponse struct {
 // handler function for the /bars endpoint
 func bars(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("[ STATUS ] request recieved (%s) %v\n", r.URL.Path, time.Now())
+
+	enableCors(&w)
 
 	// only process POST requests
 	if r.Method != "POST" {
@@ -84,6 +88,8 @@ type AddResponse struct {
 // handler function for the /add endpoint
 func add(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("[ STATUS ] request recieved (%s) %v\n", r.URL.Path, time.Now())
+
+	enableCors(&w)
 
 	// only process POST requests
 	if r.Method != "POST" {
