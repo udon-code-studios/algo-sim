@@ -61,6 +61,9 @@ export default function RawBars() {
       case "end":
         setEndDate(value);
         break;
+      default:
+        console.log('[ ERROR ] -', `Unknown input name: ${name}`);
+        break;
     }
   }
 

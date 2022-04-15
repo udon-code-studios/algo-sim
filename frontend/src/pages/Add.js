@@ -30,6 +30,9 @@ export default function Add() {
       case "python":
         setEditorValue(defaultPythonValue);
         break;
+      default:
+        console.log("[ ERROR ] - unknown language:", language);
+        break;
     }
   }, [language]);
 
@@ -79,6 +82,9 @@ export default function Add() {
         break;
       case "b":
         setB(value);
+        break;
+      default:
+        console.log('[ ERROR ] -', `Unknown input name: ${name}`);
         break;
     }
   }
