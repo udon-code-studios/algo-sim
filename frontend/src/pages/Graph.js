@@ -53,7 +53,7 @@ export default function Graph() {
       if (response.ok) {
         response.json().then(data => {
           console.log('[ STATUS ] POST request to /bars succeeded -', Date());
-          console.log('[ DATA ] -', data);
+          //console.log('[ DATA ] -', data);
           setBars(data.bars);
         });
       } else {
