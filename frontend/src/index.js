@@ -1,20 +1,26 @@
-import React from 'react';
-import { createRoot } from 'react-dom/client';
+import React from "react";
+import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import { Helmet, HelmetProvider } from 'react-helmet-async';
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { Helmet, HelmetProvider } from "react-helmet-async";
 
-const container = document.getElementById('root');
+const container = document.getElementById("root");
 const root = createRoot(container);
 root.render(
   <React.StrictMode>
     <HelmetProvider>
       <Helmet>
         <title>AlgoSim</title>
-        <meta name="description" content="Algorithmic stock trading simulation." />
-        <meta name="keywords" content="Stock Market, Algorithm, Algo Trading, Stocks, Algo" />
+        <meta
+          name="description"
+          content="Algorithmic stock trading simulation."
+        />
+        <meta
+          name="keywords"
+          content="Stock Market, Algorithm, Algo Trading, Stocks, Algo"
+        />
         <meta name="author" content="Leo Battalora" />
       </Helmet>
       <BrowserRouter>

@@ -2,9 +2,9 @@ import { Link } from "react-router-dom";
 
 export default function PageNotFound() {
   return (
-    <div className="flex flex-col justify-center items-center h-80 text-xl font-mono space-y-5">
+    <div className="flex h-80 flex-col items-center justify-center space-y-5 font-mono text-xl">
       <pre>404 (page not found)</pre>
-      <Link to="/" className="underline text-sm">
+      <Link to="/" className="text-sm underline">
         click me to go Home
       </Link>
     </div>

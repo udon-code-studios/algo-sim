@@ -4,41 +4,45 @@ import * as constants from "../constants";
 
 export default function RawBars() {
   // form fields
-  const [symbol, setSymbol] = useState('INTC');
-  const [startDate, setStartDate] = useState(new Date(2022, 3 - 1, 28).toISOString().substring(0, 10));
-  const [endDate, setEndDate] = useState(new Date(2022, 4 - 1, 8).toISOString().substring(0, 10));
+  const [symbol, setSymbol] = useState("INTC");
+  const [startDate, setStartDate] = useState(
+    new Date(2022, 3 - 1, 28).toISOString().substring(0, 10)
+  );
+  const [endDate, setEndDate] = useState(
+    new Date(2022, 4 - 1, 8).toISOString().substring(0, 10)
+  );
 
   // results
   const [bars, setBars] = useState(null);
 
   // call backend to query stock bars on form submission
   function handleSubmit(event) {
-    console.log('[ STATUS ] making POST request to /bars -', Date());
+    console.log("[ STATUS ] making POST request to /bars -", Date());
 
     const start = new Date(Date.parse(startDate));
-    start.setUTCHours(13, 30) // start of normal trading hours
+    start.setUTCHours(13, 30); // start of normal trading hours
     const end = new Date(Date.parse(endDate));
-    end.setUTCHours(19, 59) // end of normal trading hours
+    end.setUTCHours(19, 59); // end of normal trading hours
 
     fetch(`${constants.BACKEND_URI}/bars`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         symbol: symbol, // string
         start: start.toISOString(), // string
         end: end.toISOString(), // string
       }),
-    }).then(response => {
+    }).then((response) => {
       if (response.ok) {
-        response.json().then(data => {
-          console.log('[ STATUS ] POST request to /bars succeeded -', Date());
+        response.json().then((data) => {
+          console.log("[ STATUS ] POST request to /bars succeeded -", Date());
           //console.log('[ DATA ] -', data);
           setBars(data.bars);
         });
       } else {
-        response.json().then(error => {
-          console.log('[ STATUS ] POST request to /bars failed -', Date());
-          console.log('[ ERROR ] -', error);
+        response.json().then((error) => {
+          console.log("[ STATUS ] POST request to /bars failed -", Date());
+          console.log("[ ERROR ] -", error);
         });
       }
     });
@@ -62,7 +66,7 @@ export default function RawBars() {
         setEndDate(value);
         break;
       default:
-        console.log('[ ERROR ] -', `Unknown input name: ${name}`);
+        console.log("[ ERROR ] -", `Unknown input name: ${name}`);
         break;
     }
   }
@@ -71,14 +75,19 @@ export default function RawBars() {
     <div className="flex h-screen w-full flex-col items-center bg-gray-500">
       {/* back button */}
       <Link to="/" className="absolute top-10 left-10">
-        <button className="bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded-xl">Back</button>
+        <button className="rounded-xl bg-gray-800 py-2 px-4 font-bold text-white hover:bg-gray-900">
+          Back
+        </button>
       </Link>
 
       {/* header */}
       <h1 className="mt-4 text-4xl font-bold">Just raw data.</h1>
 
       {/* form */}
-      <form onSubmit={handleSubmit} className="m-4 flex w-full max-w-xl flex-col rounded-2xl bg-gray-200 font-mono">
+      <form
+        onSubmit={handleSubmit}
+        className="m-4 flex w-full max-w-xl flex-col rounded-2xl bg-gray-200 font-mono"
+      >
         {/* symbol input */}
         <div className="m-4 flex justify-center space-x-8 ">
           <label className="text-xl font-extrabold">
@@ -102,7 +111,8 @@ export default function RawBars() {
               type="date"
               defaultValue={startDate}
               onChange={handleInputChange}
-              className="ml-2 w-20 text-center" />
+              className="ml-2 w-20 text-center"
+            />
           </label>
           <label className="text-xl font-extrabold">
             End
@@ -111,7 +121,8 @@ export default function RawBars() {
               type="date"
               defaultValue={endDate}
               onChange={handleInputChange}
-              className="ml-2 w-20 text-center" />
+              className="ml-2 w-20 text-center"
+            />
           </label>
         </div>
 
@@ -127,7 +138,7 @@ export default function RawBars() {
       </form>
 
       {/* output */}
-      <div className="max-w-xl mb-5 px-10 overflow-y-scroll">
+      <div className="mb-5 max-w-xl overflow-y-scroll px-10">
         <pre>{bars && JSON.stringify(bars, null, 2)}</pre>
       </div>
     </div>

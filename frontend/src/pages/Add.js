@@ -4,8 +4,10 @@ import Editor from "@monaco-editor/react";
 import * as constants from "../constants";
 
 // editor starting values
-const defaultJavaScriptValue = "function add(a, b) {\n\t// complete function\n\treturn (99);\n}";
-const defaultPythonValue = "def add(a, b):\n\t# complete function\n\treturn (99)";
+const defaultJavaScriptValue =
+  "function add(a, b) {\n\t// complete function\n\treturn (99);\n}";
+const defaultPythonValue =
+  "def add(a, b):\n\t# complete function\n\treturn (99)";
 
 export default function Add() {
   const [editor, setEditor] = useState(null);
@@ -38,29 +40,29 @@ export default function Add() {
 
   // call backend to execute code on form submission
   function handleSubmit(event) {
-    console.log('[ STATUS ] making POST request to /add -', Date());
+    console.log("[ STATUS ] making POST request to /add -", Date());
 
     fetch(`${constants.BACKEND_URI}/add`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         a: a.toString(), // string
         b: b.toString(), // string
         language: language, // string
         code: code, // string
       }),
-    }).then(response => {
+    }).then((response) => {
       if (response.ok) {
-        response.json().then(data => {
-          console.log('[ STATUS ] POST request to /add succeeded -', Date());
-          console.log('[ DATA ] -', data);
+        response.json().then((data) => {
+          console.log("[ STATUS ] POST request to /add succeeded -", Date());
+          console.log("[ DATA ] -", data);
           setC(data.c);
           setOutput(data.output);
         });
       } else {
-        response.json().then(error => {
-          console.log('[ STATUS ] POST request to /add failed -', Date());
-          console.log('[ ERROR ] -', error);
+        response.json().then((error) => {
+          console.log("[ STATUS ] POST request to /add failed -", Date());
+          console.log("[ ERROR ] -", error);
         });
       }
     });
@@ -84,7 +86,7 @@ export default function Add() {
         setB(value);
         break;
       default:
-        console.log('[ ERROR ] -', `Unknown input name: ${name}`);
+        console.log("[ ERROR ] -", `Unknown input name: ${name}`);
         break;
     }
   }
@@ -93,12 +95,17 @@ export default function Add() {
     <div className="flex min-h-screen w-full flex-col items-center bg-gray-500">
       {/* back button */}
       <Link to="/" className="absolute top-10 left-10">
-        <button className="bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded-xl">Back</button>
+        <button className="rounded-xl bg-gray-800 py-2 px-4 font-bold text-white hover:bg-gray-900">
+          Back
+        </button>
       </Link>
 
       <h1 className="mt-4 text-4xl font-bold">Just an add function...</h1>
 
-      <form onSubmit={handleSubmit} className="m-4 flex w-full max-w-xl flex-col rounded-2xl bg-gray-200 font-mono">
+      <form
+        onSubmit={handleSubmit}
+        className="m-4 flex w-full max-w-xl flex-col rounded-2xl bg-gray-200 font-mono"
+      >
         {/* language selctor */}
         <div className="flex w-full max-w-xl justify-end space-x-2 rounded-t-2xl bg-black px-3 pt-2 pr-6 font-mono text-gray-300">
           <label>select language</label>
@@ -164,9 +171,7 @@ export default function Add() {
 
       {/* output */}
       <div className="h-80 max-w-xl space-y-4">
-        <p className="text-center font-bold">
-          {c && `Result: ${c}`}
-        </p>
+        <p className="text-center font-bold">{c && `Result: ${c}`}</p>
         <pre>{output && output}</pre>
       </div>
     </div>

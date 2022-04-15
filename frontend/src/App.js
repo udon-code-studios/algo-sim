@@ -1,12 +1,12 @@
-import * as React from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
-import * as pages from './pages';
+import * as React from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
+import * as pages from "./pages";
 
 export default function App() {
   const location = useLocation();
 
   return (
-    <div className="relative flex flex-col min-h-screen">
+    <div className="relative flex min-h-screen flex-col">
       <Routes location={location} key={location.pathname}>
         <Route path="/">
           <Route index element={<pages.Home />} />
