@@ -150,7 +150,7 @@ export default function Graph() {
 
       {/* graph output */}
       {bars &&
-        <div className="max-w-5xl w-5/6 h-96">
+        <div className="w-5/6 h-96">
           <Line
             data={{
               labels: bars.map(bar => bar.t),
