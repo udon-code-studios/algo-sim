@@ -35,6 +35,7 @@ export default function Graph() {
   // call backend to query stock bars on form submission
   function handleSubmit(event) {
     console.log('[ STATUS ] making POST request to /bars -', Date());
+    console.log(`[ STATUS ] backend URI: ${constants.BACKEND_URI}, ${process.env.BACKEND_URI}`);
 
     const start = new Date(Date.parse(startDate));
     start.setUTCHours(13, 30) // start of normal trading hours
