@@ -13,6 +13,7 @@ export default function App() {
           <Route path="add" element={<pages.Add />} />
           <Route path="raw-bars" element={<pages.RawBars />} />
           <Route path="graph" element={<pages.Graph />} />
+          <Route path="algo-v1" element={<pages.AlgoV1 />} />
           <Route path="*" element={<pages.PageNotFound />} />
         </Route>
       </Routes>
