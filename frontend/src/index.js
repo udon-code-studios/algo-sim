@@ -5,6 +5,34 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { Helmet, HelmetProvider } from "react-helmet-async";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+//-----------------------------------------------------------------------------
+// initialize chart.js
+//-----------------------------------------------------------------------------
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+//-----------------------------------------------------------------------------
+// render app
+//-----------------------------------------------------------------------------
 
 const container = document.getElementById("root");
 const root = createRoot(container);
