@@ -2,30 +2,11 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import * as constants from "../constants";
 import { Line } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
 
 export default function Graph() {
   // form fields
   const [symbol, setSymbol] = useState("INTC");
+  const [labelSymbol, setLabelSymbol] = useState("INTC");
   const [startDate, setStartDate] = useState(
     new Date(2022, 3 - 1, 28).toISOString().substring(0, 10)
   );
@@ -59,6 +40,7 @@ export default function Graph() {
         response.json().then((data) => {
           console.log("[ STATUS ] POST request to /bars succeeded -", Date());
           //console.log('[ DATA ] -', data);
+          setLabelSymbol(symbol);
           setBars(data.bars);
         });
       } else {
@@ -167,7 +149,7 @@ export default function Graph() {
               labels: bars.map((bar) => bar.t),
               datasets: [
                 {
-                  label: symbol,
+                  label: labelSymbol,
                   data: bars.map((bar) => bar.c),
                   backgroundColor: "rgba(20, 184, 166, 0.2)",
                   borderColor: "rgba(20, 184, 166, 1)",
