@@ -1,11 +1,10 @@
 package alpaca
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/alpacahq/alpaca-trade-api-go/v2/marketdata"
-	f "subparoprogramming.org/algosim-backend/funcs"
+	"subparoprogramming.org/algosim-backend/funcs"
 )
 
 type Bar struct {
@@ -30,7 +29,7 @@ func GetBarsMinute(symbol string, start time.Time, end time.Time) []Bar {
 		Start:     start,
 		End:       end,
 	})
-	f.CheckError(err)
+	funcs.CheckError(err)
 
 	// filter out bars outside normal trading hours
 	// normal trading hours (UTC): 13:30 - 19:59
@@ -62,19 +61,22 @@ func GetBarsMinute(symbol string, start time.Time, end time.Time) []Bar {
 	return bars
 }
 
-func GetBarsMinuteLast2Days(symbol string, start time.Time, end time.Time) {
-	// if start is a Saturday, Sunday, Monday, or Tuesday, make sure there's two business days prior
+func GetBarsMinuteLast2Days(symbol string, start time.Time, end time.Time) []Bar {
+	// make sure there are enough bars to calculate the last 2 days
 	switch start.Weekday() {
-	case time.Saturday:
-		start = start.AddDate(0, 0, -2)
 	case time.Sunday:
 		start = start.AddDate(0, 0, -3)
 	case time.Monday:
 		start = start.AddDate(0, 0, -4)
 	case time.Tuesday:
 		start = start.AddDate(0, 0, -4)
+	default:
+		start = start.AddDate(0, 0, -2)
 	}
 
 	// print start day of week
-	fmt.Println("start day of week:", start.Weekday())
+	//fmt.Println("[ DEBUG ] start day:", start.Weekday())
+
+	// get minute bars for the new time range
+	return GetBarsMinute(symbol, start, end)
 }
