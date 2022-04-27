@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+
+	"subparoprogramming.org/algosim-backend/api"
+	"subparoprogramming.org/algosim-backend/funcs"
 )
 
 func main() {
@@ -16,12 +19,13 @@ func main() {
 	}
 
 	// set http handler functions
-	http.HandleFunc("/", hello)
-	http.HandleFunc("/bars", bars)
-	http.HandleFunc("/add", add)
+	http.HandleFunc("/", api.Hello)
+	http.HandleFunc("/bars", api.Bars)
+	http.HandleFunc("/add", api.Add)
+	http.HandleFunc("/sim-v1", api.SimV1)
 
 	// start server
 	fmt.Println("AlgoSim backend listening on port", port)
 	err := http.ListenAndServe(":"+port, nil)
-	checkError(err)
+	funcs.CheckError(err)
 }

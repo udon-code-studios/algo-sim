@@ -1,4 +1,4 @@
-package main
+package api
 
 import (
 	"bytes"
@@ -10,68 +10,9 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	f "subparoprogramming.org/algosim-backend/funcs"
 )
-
-// handler function for the / endpoint
-func hello(w http.ResponseWriter, r *http.Request) {
-	fmt.Printf("[ STATUS ] request recieved (%s) %v\n", r.URL.Path, time.Now())
-
-	enableCors(&w)
-
-	if r.URL.Path != "/" {
-		http.Error(w, "404 not found", http.StatusNotFound)
-		return
-	}
-
-	switch r.Method {
-	case "GET":
-		fmt.Fprintf(w, "{ \"hello\": \"world GET\" }")
-	case "POST":
-		fmt.Fprintf(w, "{ \"hello\": \"world POST\" }")
-	default:
-		fmt.Fprintf(w, "{ \"error\": \"only GET and POST methods are supported\" }")
-	}
-}
-
-type BarsRequest struct {
-	Symbol string
-	Start  time.Time
-	End    time.Time
-}
-
-type BarsResponse struct {
-	Bars []Bar `json:"bars"`
-}
-
-// handler function for the /bars endpoint
-func bars(w http.ResponseWriter, r *http.Request) {
-	fmt.Printf("[ STATUS ] request recieved (%s) %v\n", r.URL.Path, time.Now())
-
-	enableCors(&w)
-
-	// only process POST requests
-	if r.Method != "POST" {
-		fmt.Fprintf(w, "{ \"error\": \"only POST method is supported\" }")
-		return
-	}
-
-	var reqBody BarsRequest
-
-	// Try to decode the request body into the struct. If there is an error,
-	// respond to the client with the error message and a 400 status code.
-	err := json.NewDecoder(r.Body).Decode(&reqBody)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-
-	// get bars from Alpaca API
-	bars := getBarsMinute(reqBody.Symbol, reqBody.Start, reqBody.End)
-
-	// format and send response
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(BarsResponse{Bars: bars})
-}
 
 type AddRequest struct {
 	A        string
@@ -86,10 +27,10 @@ type AddResponse struct {
 }
 
 // handler function for the /add endpoint
-func add(w http.ResponseWriter, r *http.Request) {
+func Add(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("[ STATUS ] request recieved (%s) %v\n", r.URL.Path, time.Now())
 
-	enableCors(&w)
+	f.EnableCors(&w)
 
 	// only process POST requests
 	if r.Method != "POST" {
@@ -107,7 +48,7 @@ func add(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	unique := randomHexString(20)
+	unique := f.RandomHexString(20)
 
 	var filename, contents string
 	var cmd *exec.Cmd
@@ -142,7 +83,7 @@ print(c)`
 
 	// write user code to executable file
 	err = os.WriteFile(filename, []byte(contents), 0777)
-	checkError(err)
+	f.CheckError(err)
 
 	// execute file and capture stdout and stdin
 	var stdout, stderr bytes.Buffer
@@ -164,7 +105,7 @@ print(c)`
 	var c int
 	if len(splitStdout) > 1 {
 		c, _ = strconv.Atoi(strings.Split(splitStdout[1], "\n")[0])
-		checkError(err)
+		f.CheckError(err)
 	} else {
 		c = -1
 	}
