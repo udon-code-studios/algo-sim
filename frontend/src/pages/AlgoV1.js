@@ -13,7 +13,7 @@ const defaultJavaScriptValue = `/**
  * tradeOnTheMinute will execute at the close of each minute
  * for the given stock. The bars argument is indexed with 
  * bars[bars.length] being the most recent minute and bars[0]
- * being 780 minutes ago (relativeto the minute this function 
+ * being 780 minutes ago (relative to the minute this function 
  * is being executed on).
  * 
  * @param {[
