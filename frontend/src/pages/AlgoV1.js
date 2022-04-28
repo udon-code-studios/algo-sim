@@ -273,7 +273,7 @@ export default function AlgoV1() {
 
           {/* graph output */}
           {bars && (
-            <div className="h-96 w-full">
+            <div className="h-full max-h-96 w-full">
               <Line
                 data={{
                   labels: bars.map((bar) => ""), //bar.t),
@@ -295,7 +295,7 @@ export default function AlgoV1() {
           )}
 
           {/* simulation gain/loss */}
-          <div className="flex h-80 w-full grow flex-col space-y-2">
+          <div className="flex h-40 w-full grow flex-col space-y-2">
             {gainLoss != null && (
               <>
                 <div className="flex w-full justify-center space-x-2 text-xl font-bold">
