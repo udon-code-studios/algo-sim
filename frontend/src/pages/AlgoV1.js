@@ -2,22 +2,23 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Editor from "@monaco-editor/react";
 import { Line } from "react-chartjs-2";
-import { ArrowSmLeftIcon } from "@heroicons/react/solid";
+import {
+  ArrowSmLeftIcon,
+  TrendingUpIcon,
+  TrendingDownIcon,
+} from "@heroicons/react/solid";
 import * as constants from "../constants";
 
 const defaultJavaScriptValue = `/**
  * tradeOnTheMinute will execute at the close of each minute
  * for the given stock. The bars argument is indexed with 
  * bars[bars.length] being the most recent minute and bars[0]
- * being the first minute of the previous trading day (relative
- * to the minute this function is being executed on).
- * 
- * e.g. If bars[length].t is 2022/04/20 2:43 PM EST,
- * then bars[0].t is 2022/04/19 9:30 AM EST.
+ * being 780 minutes ago (relativeto the minute this function 
+ * is being executed on).
  * 
  * @param {[
  *   {
- *     t: string, // timestamp
+ *     t: string, // timestamp (YYYY-MM-DDTHH:MM:00.000Z)
  *     o: number, // open price
  *     h: number, // high price
  *     l: number, // low price
@@ -32,7 +33,11 @@ const defaultJavaScriptValue = `/**
  */
 function tradeOnTheMinute(bars) {
   // complete function
-  return (BUY);
+  if (bars[bars.length - 1].o < bars[bars.length - 1].c) {
+    return BUY;
+  } else {
+    return SELL;
+  }
 }`;
 const defaultPythonValue = `def tradeOnTheMinute(bars):
   # Python has not been implemented yet. Please use javascript instead.
@@ -42,16 +47,16 @@ export default function AlgoV1() {
   // render graph on page load
   useEffect(() => {
     handleGraphSubmit(null);
-  });
+  }, []);
 
   // graph form fields
-  const [symbol, setSymbol] = useState("INTC");
-  const [labelSymbol, setLabelSymbol] = useState("INTC");
+  const [symbol, setSymbol] = useState("CAN");
+  const [labelSymbol, setLabelSymbol] = useState("CAN");
   const [startDate, setStartDate] = useState(
-    new Date(2022, 4 - 1, 6).toISOString().substring(0, 10)
+    new Date(2021, 3 - 1, 8).toISOString().substring(0, 10)
   );
   const [endDate, setEndDate] = useState(
-    new Date(2022, 4 - 1, 8).toISOString().substring(0, 10)
+    new Date(2021, 3 - 1, 12).toISOString().substring(0, 10)
   );
 
   // graph results
@@ -65,6 +70,7 @@ export default function AlgoV1() {
 
   // simulation results
   const [output, setOutput] = useState(null);
+  const [gainLoss, setGainLoss] = useState(null);
 
   // change default editor value when new language is selected
   useEffect(() => {
@@ -134,6 +140,7 @@ export default function AlgoV1() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        symbol: symbol, // string
         start: start.toISOString(), // string
         end: end.toISOString(), // string
         language: language, // string
@@ -148,6 +155,7 @@ export default function AlgoV1() {
               Date()
             );
             console.log("[ DATA ] -", data);
+            setGainLoss(data.g * 100);
             setOutput(data.output);
           });
         } else {
@@ -192,7 +200,7 @@ export default function AlgoV1() {
   }
 
   return (
-    <div className="flex h-screen w-full flex-col items-center overflow-y-scroll bg-gray-200 pb-8">
+    <div className="flex h-screen w-full flex-col items-center bg-gray-200 px-2 pb-8">
       {/* back button */}
       <Link to="/" className="absolute top-6 left-6">
         <button className="rounded-full bg-gray-700 py-2 px-2 font-bold text-white shadow-lg hover:bg-gray-900">
@@ -208,11 +216,11 @@ export default function AlgoV1() {
       {/* content */}
       <div className="flex h-full w-full max-w-screen-xl space-x-5">
         {/* column 1: symbol/date + graph */}
-        <div className="flex w-2/5 flex-col items-center">
+        <div className="flex max-h-full w-2/5 flex-col items-center overflow-clip">
           {/* form */}
           <form
             onSubmit={handleGraphSubmit}
-            className="flex w-full flex-col rounded-2xl bg-gray-700 font-mono text-white"
+            className="flex h-min w-full flex-col rounded-2xl bg-gray-700 font-mono text-white"
           >
             {/* symbol input */}
             <div className="m-4 flex justify-center space-x-8 ">
@@ -286,14 +294,39 @@ export default function AlgoV1() {
             </div>
           )}
 
-          {/* simulation output */}
-          <div className="mb-2 max-h-64 rounded-full bg-gray-400 px-4">
-            <pre>{output && output}</pre>
+          {/* simulation gain/loss */}
+          <div className="flex h-80 w-full grow flex-col space-y-2">
+            {gainLoss != null && (
+              <>
+                <div className="flex w-full justify-center space-x-2 text-xl font-bold">
+                  <p>Simulation Gain/Loss:</p>
+                  {gainLoss > 0 ? (
+                    <div className="flex space-x-2 text-green-500">
+                      <TrendingUpIcon className="h-8 w-8" />
+                      <p className="text-xl font-extrabold">
+                        {gainLoss.toFixed(2)}%
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="flex space-x-2 text-red-500">
+                      <TrendingDownIcon className="h-8 w-8" />
+                      <p className="text-xl font-extrabold">
+                        {gainLoss.toFixed(2)}%
+                      </p>
+                    </div>
+                  )}
+                </div>
+                {/* simulation output */}
+                <div className="w-full shrink justify-center overflow-scroll rounded-xl bg-gray-400 px-4">
+                  <pre>{output && output}</pre>
+                </div>
+              </>
+            )}
           </div>
         </div>
 
         {/* column 2: code editor + output */}
-        <div className="flex max-h-screen grow flex-col space-y-3">
+        <div className="flex h-full  grow flex-col space-y-3">
           <form
             onSubmit={handleCodeSubmit}
             className="flex h-full w-full flex-col rounded-2xl bg-gray-700 font-mono"
